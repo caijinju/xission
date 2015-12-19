@@ -65,11 +65,4 @@ public class MyUtil {
 		
 	}
 	
-	public static void main(String[] args){
-		MyUtil mu = new MyUtil();
-		mu.printLogInformation("test!");
-		mu.printLogInformation("OK");
-		File file = new File("E:\\temp");
-		mu.deleteFiles(file);
-	}
 }
