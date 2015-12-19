@@ -1,0 +1,75 @@
+package com.cjj.util;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class MyUtil {
+
+	/**
+	 * 删除文件file：若是文件则直接删除；若是文件夹，则删除整个文件夹
+	 * @param file
+	 */
+	public void deleteFiles(File file) {
+		//判断文件是否存在
+		if (file.exists()) {
+			//是否为文件
+			if (file.isFile()) {
+				deleteInformation(file);
+			//是否为文件夹
+			} else if (file.isDirectory()) {
+				File[] files = file.listFiles();
+				//文件夹内的文件是否有访问权限
+				if (files == null) {
+					printLogInformation(file.getAbsolutePath() + "\t------> 无访问权限！");
+					return;
+				}
+				//是否为空文件夹
+				if(files.length==0){
+//					System.out.println(file.getAbsolutePath() + "\t------> 空文件夹！");
+					deleteInformation(file);
+					return;
+				}
+				//将文件夹下的子文件进行递归删除处理
+				for (File file2 : files) {
+					deleteFiles(file2);
+				}
+				//删除文件夹
+				deleteInformation(file);
+			}
+		}
+	}
+	
+	/**
+	 * 输出删除文件file的信息
+	 * @param file
+	 */
+	private void deleteInformation(File file) {
+		if (file.delete()) {
+			printLogInformation(file.getAbsolutePath()
+					+ "\t------> 删除成功！");
+		} else {
+			printLogInformation(file.getAbsolutePath()
+					+ "\t------> 删除失败！请确认原因并是否需要再次删除！");
+		}
+	}
+
+	/**
+	 * 输出日志记录：时间点+记录信息information
+	 * @param information 记录信息
+	 */
+	public void printLogInformation(String information){
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println("["+sdf.format(date)+"] : "+information);
+		
+	}
+	
+	public static void main(String[] args){
+		MyUtil mu = new MyUtil();
+		mu.printLogInformation("test!");
+		mu.printLogInformation("OK");
+		File file = new File("E:\\temp");
+		mu.deleteFiles(file);
+	}
+}
